@@ -1,2 +1,0 @@
-echo "LoadModule tile_module /usr/lib/apache2/modules/mod_tile.so" > /etc/apache2/mods-available/tile.load
-ln -s /etc/apache2/mods-available/tile.load /etc/apache2/mods-enabled/
