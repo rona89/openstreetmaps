@@ -31,8 +31,8 @@ RUN sed -i 's/\/home\/osm:/\/home\/osm:\/bin\/bash/g' /etc/passwd
 #RUN psql -c "CREATE EXTENSION postgis;" -d world
 #RUN exit
 
-RUN su osm
-RUN cd ~
+RUN su - osm
+RUN cd /home/osm
 RUN id && pwd
 #RUN git clone https://github.com/openstreetmap/mod_tile.git
 #RUN cd mod_tile
