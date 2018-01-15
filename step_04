@@ -1,0 +1,11 @@
+cd /home/osm/openstreetmap-carto-2.29.1
+sed -i 's/XML=\/home\/jburgess\/osm\/svn\.openstreetmap\.org\/applications\/rendering\/mapnik\/osm\-local\.xml/XML=\/home\/osm\/openstreetmap-carto-2.29.1\/style.xml/' /usr/local/etc/renderd.conf
+sed -i 's/HOST=tile\.openstreetmap\.org/HOST=localhost/' /usr/local/etc/renderd.conf
+sed -i 's/plugins_dir=\/usr\/lib\/mapnik\/input/plugins_dir=\/usr\/lib\/mapnik\/3.0\/input\//' /usr/local/etc/renderd.conf
+cp /home/osm/mod_tile/debian/renderd.init /etc/init.d/renderd
+chmod a+x /etc/init.d/renderd
+sed -i 's/DAEMON=\/usr\/bin\/$NAME/DAEMON=\/usr\/local\/bin\/$NAME/' /etc/init.d/renderd
+sed -i 's/DAEMON_ARGS=""/DAEMON_ARGS=" -c \/usr\/local\/etc\/renderd.conf"/' /etc/init.d/renderd
+sed -i 's/RUNASUSER=www-data/RUNASUSER=osm/' /etc/init.d/renderd
+mkdir -p /var/lib/mod_tile
+chown osm:osm /var/lib/mod_tile
