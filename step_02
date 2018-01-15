@@ -1,0 +1,10 @@
+su osm
+cd ~
+git clone https://github.com/openstreetmap/mod_tile.git
+cd mod_tile
+./autogen.sh
+./configure
+make
+exit
+cd /home/osm/mod_tile/
+make install
