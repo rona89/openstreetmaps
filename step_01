@@ -1,0 +1,11 @@
+sed -i 's/max_connections = 100/max_connections = 1000/g' /etc/postgresql/9.6/main/postgresql.conf
+/etc/init.d/postgresql start
+useradd -m -p osm osm
+sed -i 's/\/home\/osm:/\/home\/osm:\/bin\/bash/g' /etc/passwd
+su postgres
+cd ~
+createuser osm
+createdb -E UTF8 -O osm world
+psql -c "CREATE EXTENSION hstore;" -d world
+psql -c "CREATE EXTENSION postgis;" -d world
+exit
