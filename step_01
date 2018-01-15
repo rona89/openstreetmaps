@@ -4,6 +4,8 @@ useradd -m -p osm osm
 sed -i 's/\/home\/osm:/\/home\/osm:\/bin\/bash/g' /etc/passwd
 su postgres
 cd ~
+id
+pwd
 createuser osm
 createdb -E UTF8 -O osm world
 psql -c "CREATE EXTENSION hstore;" -d world
