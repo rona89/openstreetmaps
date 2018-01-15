@@ -1,2 +1,0 @@
-cp /home/osm/mod_tile/src/.libs/mod_tile.so /usr/lib/apache2/modules/mod_tile.so
-ldconfig -v
