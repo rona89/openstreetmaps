@@ -23,6 +23,7 @@ deb-src http://security.debian.org/ stretch/updates main contrib" > /etc/apt/sou
 #RUN /etc/init.d/postgresql restart
 RUN useradd -m -p osm osm
 RUN sed -i 's/\/home\/osm:/\/home\/osm:\/bin\/bash/g' /etc/passwd
+RUN cat /etc/passwd | grep osm
 #RUN su postgres
 #RUN cd ~
 #RUN createuser osm
@@ -33,6 +34,9 @@ RUN sed -i 's/\/home\/osm:/\/home\/osm:\/bin\/bash/g' /etc/passwd
 
 RUN su - osm
 RUN cd /home/osm
+RUN ls -l /home
+RUN id && pwd
+RUN cd /root
 RUN id && pwd
 #RUN git clone https://github.com/openstreetmap/mod_tile.git
 #RUN cd mod_tile
