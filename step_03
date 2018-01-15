@@ -1,0 +1,10 @@
+su osm
+cd ~
+#git clone https://github.com/gravitystorm/openstreetmap-carto.git
+wget https://github.com/gravitystorm/openstreetmap-carto/archive/v2.29.1.tar.gz
+tar -xzf v2.29.1.tar.gz
+cd ~/openstreetmap-carto-2.29.1/
+./get-shapefiles.sh
+sed -i 's/"dbname": "gis"/"dbname": "world"/' project.mml
+carto project.mml > style.xml
+exit
