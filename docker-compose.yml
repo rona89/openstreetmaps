@@ -1,0 +1,26 @@
+version: '2'
+networks:
+  docker0:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: "compose0"
+      com.docker.network.enable_ipv6: "false"
+      com.docker.network.bridge.enable_ip_masquerade: "true"
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.20.0.0/24
+        gateway: 172.20.0.1
+
+services:
+  osm:
+    restart: always
+    image: admik/osm_working
+    networks:
+      docker0:
+        ipv4_address: 172.20.0.2
+    volumes:
+      - /data/docker/perm_volumes/osm/maps_source:/maps_source:Z
+      - /data/docker/perm_volumes/osm/psql_data:/var/lib/postgresql/9.6/main:Z
+    ports:
+      - "88:80"
