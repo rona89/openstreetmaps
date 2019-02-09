@@ -50,7 +50,7 @@ RUN cp /home/osm/mod_tile/src/.libs/mod_tile.so /usr/lib/apache2/modules/mod_til
 RUN service renderd restart
 RUN service apache2 restart
 
-ADD entrypoint.sh /root/entrypoint
+ADD entrypoint.sh /root/entrypoint.sh
 RUN chmod 755 /root/entrypoint.sh
 
 ADD index.html /var/www/html/index.html
