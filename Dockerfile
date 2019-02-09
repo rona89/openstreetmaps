@@ -49,26 +49,12 @@ RUN echo "<VirtualHost *:80> \n\
 RUN cp /home/osm/mod_tile/src/.libs/mod_tile.so /usr/lib/apache2/modules/mod_tile.so && ldconfig -v
 RUN service renderd restart
 RUN service apache2 restart
-RUN echo "#!/bin/bash \n\
-if [ ! -f /var/lib/postgresql/9.6/main/PG_VERSION_ok ]; then \n\
- cp -pr /var/lib/postgresql/9.6/main_bak/* /var/lib/postgresql/9.6/main/ \n\
- /etc/init.d/postgresql restart \n\
- gosu postgres psql -c \"CREATE USER osm;\" \n\
- gosu postgres psql -c \"CREATE DATABASE world;\" \n\
- gosu postgres psql -c \"GRANT ALL PRIVILEGES ON DATABASE world TO osm;\" \n\
- gosu postgres psql -c \"CREATE EXTENSION hstore;\" -d world \n\
- gosu postgres psql -c \"CREATE EXTENSION postgis;\" -d world \n\
- touch /var/lib/postgresql/9.6/main/PG_VERSION_ok \n\
-fi \n\
-chown -R postgres:postgres /var/lib/postgresql/9.6/main \n\
-chmod 0700 /var/lib/postgresql/9.6/main \n\
- \n\
-/etc/init.d/postgresql restart \n\
-/etc/init.d/renderd restart \n\
-/etc/init.d/apache2 restart \n\
- \n\
-while true; do \n\
- sleep 600 \n\
-done" > /root/entrypoint.sh && chmod 755 /root/entrypoint.sh
+
+ADD entrypoint.sh /root/entrypoint
+RUN chmod 755 /root/entrypoint.sh
+
 ADD index.html /var/www/html/index.html
+ADD script.js /var/www/html/script.js
+ADD style.css /var/www/html/style.css
+
 CMD /root/entrypoint.sh
