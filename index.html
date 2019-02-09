@@ -16,7 +16,7 @@
         mapLink =
             '<a href="http://openstreetmap.org">OpenStreetMap</a>';
         L.tileLayer(
-            'http://localhost/osm_tiles/{z}/{x}/{y}.png', {
+            'osm_tiles/{z}/{x}/{y}.png', {
             attribution: '&copy; ' + mapLink + ' Contributors',
             maxZoom: 18,
             }).addTo(map);
