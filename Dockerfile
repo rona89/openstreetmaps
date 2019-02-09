@@ -38,8 +38,8 @@ RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 RUN echo "<VirtualHost *:80> \n\
         ServerAdmin webmaster@localhost \n\
         DocumentRoot /var/www/html \n\
-        ErrorLog ${APACHE_LOG_DIR}/error.log \n\
-        CustomLog ${APACHE_LOG_DIR}/access.log combined \n\
+        ErrorLog /var/log/apache2/error.log \n\
+        CustomLog /var/log/apache2/access.log combined \n\
         LoadTileConfigFile /usr/local/etc/renderd.conf \n\
         ModTileRenderdSocketName /var/run/renderd/renderd.sock \n\
         ModTileRequestTimeout 0 \n\
