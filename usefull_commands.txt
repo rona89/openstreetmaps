@@ -1,6 +1,12 @@
 # MANUAL RENDER
 su osm -c "render_list -m default -a -z 0 -Z 5"
 
+# CHECK STATS
+cat /var/run/renderd/renderd.stats | grep -v ": 0"
+
+# DIR WITH TILES
+/var/lib/mod_tile
+
 # DELETE DB
 gosu postgres psql -c "DROP DATABASE world;"
 
