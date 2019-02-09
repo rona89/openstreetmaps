@@ -50,7 +50,7 @@ RUN chown osm:osm /var/lib/mod_tile
 RUN echo "LoadModule tile_module /usr/lib/apache2/modules/mod_tile.so" > /etc/apache2/mods-available/tile.load
 RUN ln -s /etc/apache2/mods-available/tile.load /etc/apache2/mods-enabled/
 
-RUN echo "<VirtualHost *:80>" >> /etc/apache2/sites-enabled/000-default.conf
+RUN echo "<VirtualHost *:80>" > /etc/apache2/sites-enabled/000-default.conf
 RUN echo "        ServerAdmin webmaster@localhost" >> /etc/apache2/sites-enabled/000-default.conf
 RUN echo "        DocumentRoot /var/www/html" >> /etc/apache2/sites-enabled/000-default.conf
 RUN echo "        ErrorLog ${APACHE_LOG_DIR}/error.log" >> /etc/apache2/sites-enabled/000-default.conf
