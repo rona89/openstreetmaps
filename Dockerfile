@@ -17,50 +17,58 @@ deb http://security.debian.org/ stretch/updates main contrib \n\
 deb-src http://security.debian.org/ stretch/updates main contrib" > /etc/apt/sources.list
 
 RUN apt-get update && apt-get -y upgrade && apt-get -y dist-upgrade && apt-get -y autoremove
-RUN apt-get update && apt-get -y install postgresql-9.6-postgis-2.3 postgresql-contrib-9.6 git vim wget curl screen osm2pgsql autoconf libtool libmapnik-dev apache2-dev unzip gdal-bin mapnik-utils node-carto apache2  && apt-get clean
+RUN apt-get update && apt-get -y install postgresql-9.6-postgis-2.3 postgresql-contrib-9.6 git vim wget curl screen osm2pgsql autoconf libtool libmapnik-dev apache2-dev unzip gdal-bin mapnik-utils node-carto apache2 gosu && apt-get clean
 
 RUN sed -i 's/max_connections = 100/max_connections = 1000/g' /etc/postgresql/9.6/main/postgresql.conf
-RUN /etc/init.d/postgresql restart
 RUN useradd -m -p osm osm
 RUN sed -i 's/\/home\/osm:/\/home\/osm:\/bin\/bash/g' /etc/passwd
-#RUN su postgres
-#RUN cd ~
-#RUN createuser osm
-#RUN createdb -E UTF8 -O osm world
-#RUN psql -c "CREATE EXTENSION hstore;" -d world
-#RUN psql -c "CREATE EXTENSION postgis;" -d world
-#RUN exit
+RUN cp -pr /var/lib/postgresql/9.6/main /var/lib/postgresql/9.6/main_bak
 
 RUN cd /home/osm && git clone https://github.com/openstreetmap/mod_tile.git && cd mod_tile && ./autogen.sh && ./configure && make && make install && cp debian/renderd.init /etc/init.d/renderd
 
 RUN cd /home/osm && wget https://github.com/gravitystorm/openstreetmap-carto/archive/v2.29.1.tar.gz && tar -xzf v2.29.1.tar.gz && cd /home/osm/openstreetmap-carto-2.29.1 && ./get-shapefiles.sh && sed -i 's/"dbname": "gis"/"dbname": "world"/' project.mml && carto project.mml > style.xml
 
-RUN sed -i 's/XML=\/home\/jburgess\/osm\/svn\.openstreetmap\.org\/applications\/rendering\/mapnik\/osm\-local\.xml/XML=\/home\/osm\/openstreetmap-carto-2.29.1\/style.xml/' /usr/local/etc/renderd.conf
-RUN sed -i 's/HOST=tile\.openstreetmap\.org/HOST=localhost/' /usr/local/etc/renderd.conf
-RUN sed -i 's/plugins_dir=\/usr\/lib\/mapnik\/input/plugins_dir=\/usr\/lib\/mapnik\/3.0\/input\//' /usr/local/etc/renderd.conf
-RUN cat /usr/local/etc/renderd.conf | grep -v ';' > /usr/local/etc/renderd.conf.new && mv /usr/local/etc/renderd.conf /usr/local/etc/renderd.conf.bak && mv /usr/local/etc/renderd.conf.new /usr/local/etc/renderd.conf
-RUN chmod a+x /etc/init.d/renderd
+RUN sed -i 's/XML=\/home\/jburgess\/osm\/svn\.openstreetmap\.org\/applications\/rendering\/mapnik\/osm\-local\.xml/XML=\/home\/osm\/openstreetmap-carto-2.29.1\/style.xml/' /usr/local/etc/renderd.conf && sed -i 's/HOST=tile\.openstreetmap\.org/HOST=localhost/' /usr/local/etc/renderd.conf && sed -i 's/plugins_dir=\/usr\/lib\/mapnik\/input/plugins_dir=\/usr\/lib\/mapnik\/3.0\/input\//' /usr/local/etc/renderd.conf && cat /usr/local/etc/renderd.conf | grep -v ';' > /usr/local/etc/renderd.conf.new && mv /usr/local/etc/renderd.conf /usr/local/etc/renderd.conf.bak && mv /usr/local/etc/renderd.conf.new /usr/local/etc/renderd.conf && chmod a+x /etc/init.d/renderd && sed -i 's/DAEMON=\/usr\/bin\/$NAME/DAEMON=\/usr\/local\/bin\/$NAME/' /etc/init.d/renderd && sed -i 's/DAEMON_ARGS=""/DAEMON_ARGS=" -c \/usr\/local\/etc\/renderd.conf"/' /etc/init.d/renderd && sed -i 's/RUNASUSER=www-data/RUNASUSER=osm/' /etc/init.d/renderd
 
-RUN sed -i 's/DAEMON=\/usr\/bin\/$NAME/DAEMON=\/usr\/local\/bin\/$NAME/' /etc/init.d/renderd
-RUN sed -i 's/DAEMON_ARGS=""/DAEMON_ARGS=" -c \/usr\/local\/etc\/renderd.conf"/' /etc/init.d/renderd
-RUN sed -i 's/RUNASUSER=www-data/RUNASUSER=osm/' /etc/init.d/renderd
-RUN mkdir -p /var/lib/mod_tile
-RUN chown osm:osm /var/lib/mod_tile
+RUN mkdir -p /var/lib/mod_tile && chown osm:osm /var/lib/mod_tile
+RUN echo "LoadModule tile_module /usr/lib/apache2/modules/mod_tile.so" > /etc/apache2/mods-available/tile.load && ln -s /etc/apache2/mods-available/tile.load /etc/apache2/mods-enabled/
 
-RUN echo "LoadModule tile_module /usr/lib/apache2/modules/mod_tile.so" > /etc/apache2/mods-available/tile.load
-RUN ln -s /etc/apache2/mods-available/tile.load /etc/apache2/mods-enabled/
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
-RUN echo "<VirtualHost *:80>" > /etc/apache2/sites-enabled/000-default.conf
-RUN echo "        ServerAdmin webmaster@localhost" >> /etc/apache2/sites-enabled/000-default.conf
-RUN echo "        DocumentRoot /var/www/html" >> /etc/apache2/sites-enabled/000-default.conf
-RUN echo "        ErrorLog ${APACHE_LOG_DIR}/error.log" >> /etc/apache2/sites-enabled/000-default.conf
-RUN echo "        CustomLog ${APACHE_LOG_DIR}/access.log combined" >> /etc/apache2/sites-enabled/000-default.conf
-RUN echo "        LoadTileConfigFile /usr/local/etc/renderd.conf" >> /etc/apache2/sites-enabled/000-default.conf
-RUN echo "        ModTileRenderdSocketName /var/run/renderd/renderd.sock" >> /etc/apache2/sites-enabled/000-default.conf
-RUN echo "        ModTileRequestTimeout 0" >> /etc/apache2/sites-enabled/000-default.conf
-RUN echo "        ModTileMissingRequestTimeout 30" >> /etc/apache2/sites-enabled/000-default.conf
-RUN echo "</VirtualHost>" >> /etc/apache2/sites-enabled/000-default.conf
-RUN cp /home/osm/mod_tile/src/.libs/mod_tile.so /usr/lib/apache2/modules/mod_tile.so
-RUN ldconfig -v
+RUN echo "<VirtualHost *:80> \n\
+        ServerAdmin webmaster@localhost \n\
+        DocumentRoot /var/www/html \n\
+        ErrorLog ${APACHE_LOG_DIR}/error.log \n\
+        CustomLog ${APACHE_LOG_DIR}/access.log combined \n\
+        LoadTileConfigFile /usr/local/etc/renderd.conf \n\
+        ModTileRenderdSocketName /var/run/renderd/renderd.sock \n\
+        ModTileRequestTimeout 0 \n\
+        ModTileMissingRequestTimeout 30 \n\
+</VirtualHost>" > /etc/apache2/sites-enabled/000-default.conf
 
-CMD /etc/init.d/postgresql restart && service renderd restart && service apache2 restart && while true; do sleep 600; done
+RUN cp /home/osm/mod_tile/src/.libs/mod_tile.so /usr/lib/apache2/modules/mod_tile.so && ldconfig -v
+RUN service renderd restart
+RUN service apache2 restart
+RUN echo "#!/bin/bash \n\
+if [ ! -f /var/lib/postgresql/9.6/main/PG_VERSION_ok ]; then \n\
+ cp -pr /var/lib/postgresql/9.6/main_bak/* /var/lib/postgresql/9.6/main/ \n\
+ /etc/init.d/postgresql restart \n\
+ gosu postgres psql -c \"CREATE USER osm;\" \n\
+ gosu postgres psql -c \"CREATE DATABASE world;\" \n\
+ gosu postgres psql -c \"GRANT ALL PRIVILEGES ON DATABASE world TO osm;\" \n\
+ gosu postgres psql -c \"CREATE EXTENSION hstore;\" -d world \n\
+ gosu postgres psql -c \"CREATE EXTENSION postgis;\" -d world \n\
+ touch /var/lib/postgresql/9.6/main/PG_VERSION_ok \n\
+fi \n\
+chown -R postgres:postgres /var/lib/postgresql/9.6/main \n\
+chmod 0700 /var/lib/postgresql/9.6/main \n\
+ \n\
+/etc/init.d/postgresql restart \n\
+/etc/init.d/renderd restart \n\
+/etc/init.d/apache2 restart \n\
+ \n\
+while true; do \n\
+ sleep 600 \n\
+done" > /root/entrypoint.sh && chmod 755 /root/entrypoint.sh
+ADD index.html /var/www/html/index.html
+CMD /root/entrypoint.sh
