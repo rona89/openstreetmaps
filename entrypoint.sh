@@ -1,4 +1,7 @@
 #!/bin/bash
+chown -R postgres:postgres /var/lib/postgresql/9.6/main
+chmod 0700 /var/lib/postgresql/9.6/main
+
 if [ ! -f /var/lib/postgresql/9.6/main/PG_VERSION_ok ]; then
  cp -pr /var/lib/postgresql/9.6/main_bak/* /var/lib/postgresql/9.6/main/
  /etc/init.d/postgresql restart
@@ -9,9 +12,6 @@ if [ ! -f /var/lib/postgresql/9.6/main/PG_VERSION_ok ]; then
  gosu postgres psql -c "CREATE EXTENSION postgis;" -d world
  touch /var/lib/postgresql/9.6/main/PG_VERSION_ok
 fi
-
-chown -R postgres:postgres /var/lib/postgresql/9.6/main
-chmod 0700 /var/lib/postgresql/9.6/main
 
 /etc/init.d/postgresql restart
 /etc/init.d/renderd restart
