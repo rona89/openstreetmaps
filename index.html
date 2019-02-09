@@ -1,0 +1,39 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+ <title> OpenStreetMaps - Leaflet </title>
+ <meta charset="utf-8" />
+ <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7/leaflet.css" />
+</head>
+<body>
+
+    <div id="map" style="height: 800px"></div>
+
+    <script
+        src="http://cdn.leafletjs.com/leaflet-0.7/leaflet.js">
+    </script>
+
+    <script>
+
+        var markers = [
+          [ "", 48.7190908, 21.2079871 ]        ];
+
+        var map = L.map('map').setView([48.7190908, 21.2079871], 8);
+        mapLink =
+            '<a href="http://openstreetmap.org">OpenStreetMap</a>';
+        L.tileLayer(
+            'http://localhost/osm_tiles/{z}/{x}/{y}.png', {
+            attribution: '&copy; ' + mapLink + ' Contributors',
+            maxZoom: 18,
+            }).addTo(map);
+
+                for (var i = 0; i < markers.length; i++) {
+                        marker = new L.marker([markers[i][1],markers[i][2]])
+                                .bindPopup(markers[i][0])
+                                .addTo(map);
+                }
+
+    </script>
+</body>
+</html>
