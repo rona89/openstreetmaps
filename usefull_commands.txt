@@ -1,0 +1,23 @@
+# DELETE DB
+su postgres
+cd
+psql
+drop database world;
+\q
+
+# MANUAL CREATE DB
+su postgres
+cd ~
+createuser osm
+createdb -E UTF8 -O osm world
+psql -c "CREATE EXTENSION hstore;" -d world
+psql -c "CREATE EXTENSION postgis;" -d world
+exit
+
+# IMPORT 
+su osm -c "osm2pgsql --slim --database world --disable-parallel-indexing --cache 800 --cache-strategy sparse --hstore --style /home/osm/openstreetmap-carto-2.29.1/openstreetmap-carto.style /maps_source/latvia-latest.osm.pbf"
+
+su osm -c "renderd -f -c /usr/local/etc/renderd.conf"
+
+# MANUAL RENDER
+su osm -c "render_list -m default -a -z 0 -Z 5"
