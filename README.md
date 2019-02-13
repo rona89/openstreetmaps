@@ -90,16 +90,24 @@ Finally, restart all services
 
 #### Here are some usefull commands
 MANUAL RENDER
-```su osm -c "render_list -m default -a -z 0 -Z 5"```
+```
+su osm -c "render_list -m default -a -z 0 -Z 5"
+```
 
 CHECK STATS
-```cat /var/run/renderd/renderd.stats | grep -v ": 0"```
+```
+cat /var/run/renderd/renderd.stats | grep -v ": 0"
+```
 
 DIR WITH TILES
-```/var/lib/mod_tile```
+```
+/var/lib/mod_tile
+```
 
 DELETE DB
-```gosu postgres psql -c "DROP DATABASE world;"```
+```
+gosu postgres psql -c "DROP DATABASE world;"
+```
 
 MANUAL CREATE DB
 ```
@@ -110,4 +118,6 @@ gosu postgres psql -c "CREATE EXTENSION hstore;" -d world
 gosu postgres psql -c "CREATE EXTENSION postgis;" -d world
 ```
 IMPORT 
-```su osm -c "osm2pgsql --slim --database world --disable-parallel-indexing --cache 800 --cache-strategy sparse --hstore --style /home/osm/openstreetmap-carto-2.29.1/openstreetmap-carto.style /maps_source/latvia-latest.osm.pbf"```
+```
+su osm -c "osm2pgsql --slim --database world --disable-parallel-indexing --cache 800 --cache-strategy sparse --hstore --style /home/osm/openstreetmap-carto-2.29.1/openstreetmap-carto.style /maps_source/latvia-latest.osm.pbf"
+```
