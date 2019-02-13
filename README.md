@@ -1,3 +1,11 @@
+# 1has
+## 2has
+### 3has
+#### 4has
+##### 5has
+###### 6has
+
+
 ### Open Street Maps on Debian - Postgresql 9.6 + Apache2
 Running OSM local server.
 
@@ -88,20 +96,20 @@ Finally, restart all services
 ```
 
 
-### Here are some usefull commands
-## MANUAL RENDER
+# Here are some usefull commands
+MANUAL RENDER
 ```su osm -c "render_list -m default -a -z 0 -Z 5"```
 
-## CHECK STATS
+CHECK STATS
 ```cat /var/run/renderd/renderd.stats | grep -v ": 0"```
 
-## DIR WITH TILES
+DIR WITH TILES
 ```/var/lib/mod_tile```
 
-## DELETE DB
+DELETE DB
 ```gosu postgres psql -c "DROP DATABASE world;"```
 
-## MANUAL CREATE DB
+MANUAL CREATE DB
 ```
 gosu postgres psql -c "CREATE USER osm;"
 gosu postgres psql -c "CREATE DATABASE world;"
@@ -109,5 +117,5 @@ gosu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE world TO osm;"
 gosu postgres psql -c "CREATE EXTENSION hstore;" -d world
 gosu postgres psql -c "CREATE EXTENSION postgis;" -d world
 ```
-## IMPORT 
+IMPORT 
 ```su osm -c "osm2pgsql --slim --database world --disable-parallel-indexing --cache 800 --cache-strategy sparse --hstore --style /home/osm/openstreetmap-carto-2.29.1/openstreetmap-carto.style /maps_source/latvia-latest.osm.pbf"```
