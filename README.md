@@ -1,16 +1,8 @@
-# 1has
-## 2has
-### 3has
-#### 4has
-##### 5has
-###### 6has
-
-
-### Open Street Maps on Debian - Postgresql 9.6 + Apache2
+## Open Street Maps on Debian - Postgresql 9.6 + Apache2
 Running OSM local server.
 
 Build as docker container, or install locally.
-## Local installation
+#### Local installation
 Add repositories
 ```
 echo "#Debian Stable (9) Stretch
@@ -96,7 +88,7 @@ Finally, restart all services
 ```
 
 
-# Here are some usefull commands
+#### Here are some usefull commands
 MANUAL RENDER
 ```su osm -c "render_list -m default -a -z 0 -Z 5"```
 
