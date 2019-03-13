@@ -67,8 +67,8 @@ service apache2 restart
 Add files to the path
 ```
 index.html /var/www/html/index.html
-script.js /var/www/html/script.js
-style.css /var/www/html/style.css
+leaflet.js /var/www/html/leaflet.js
+leaflet.css /var/www/html/leaflet.css
 ```
 Set the rights, owner, group, and create user, database for postgresql
 ```
