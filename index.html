@@ -1,4 +1,3 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -8,11 +7,9 @@
  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
  <meta http-equiv="Cache-control" content="no-cache">
  <meta http-equiv="Content-Language" content="sk">
- <meta name="google-site-verification" content="GHY_X_yeijpdBowWr_AKSMWAT8WQ-ILU-Z441AsYG9A">
  <meta name="GOOGLEBOT" CONTENT="noodp">
  <meta name="pagerank" content="10">
  <meta name="msnbot" content="robots-terms">
- <meta name="msvalidate.01" content="B786069E75B8F08919826E2B980B971A">
  <meta name="revisit-after" content="2 days">
  <meta name="robots" CONTENT="index, follow">
  <meta name="alexa" content="100">
@@ -20,24 +17,16 @@
  <meta name="keywords" lang="en" content="osm, openstreetmaps, maps, leaflet">
  <meta name="description" content="OpenStreetMaps with Leaflet in Docker">
  <meta name="Author" content="ZTK-Comp WEBHOSTING">
- <meta name="copyright" content="(c) 2019 ZTK-Comp">
+ <meta name="CopyRight" content="(c) 2019 ZTK-Comp">
  <meta charset="utf-8" />
- <link rel="stylesheet" href="style.css" />
+ <link rel="stylesheet" href="leaflet.css" />
+ <script src="leaflet.js"></script>
 </head>
 <body>
-    <div id="map" style="height: 800px"></div>
-    <script
-        src="leaflet.js">
-    </script>
-    <script>
-        var map = L.map('map').setView([48.000000, 21.000000], 4);
-        mapLink =
-            '<a href="http://openstreetmap.org">OpenStreetMap</a>';
-        L.tileLayer(
-            'osm_tiles/{z}/{x}/{y}.png', {
-            attribution: '&copy; ' + mapLink + ' Contributors',
-            maxZoom: 18,
-            }).addTo(map);
-    </script>
+<div id="map" style="height: 600px"></div>
+<script>
+ map = L.map('map').setView([48.7000, 20.1000], 8);
+ L.tileLayer('{z}/{x}/{y}.png', { maxZoom: 18,}).addTo(map);
+</script>
 </body>
 </html>
