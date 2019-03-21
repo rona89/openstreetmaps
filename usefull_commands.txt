@@ -19,3 +19,9 @@ gosu postgres psql -c "CREATE EXTENSION postgis;" -d world
 
 # IMPORT 
 su osm -c "osm2pgsql --slim --database world --disable-parallel-indexing --cache 800 --cache-strategy sparse --hstore --style /home/osm/openstreetmap-carto-2.29.1/openstreetmap-carto.style /maps_source/latvia-latest.osm.pbf"
+
+# DOWNLOAD MAPS
+http://download.geofabrik.de/
+http://download.geofabrik.de/europe/planet-latest.osm.pbf
+http://download.geofabrik.de/europe/europe-latest.osm.pbf
+http://download.geofabrik.de/europe/slovakia-latest.osm.pbf
