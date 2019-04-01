@@ -17,8 +17,14 @@ gosu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE world TO osm;"
 gosu postgres psql -c "CREATE EXTENSION hstore;" -d world
 gosu postgres psql -c "CREATE EXTENSION postgis;" -d world
 
-# IMPORT 
-su osm -c "osm2pgsql --slim --database world --disable-parallel-indexing --cache 800 --cache-strategy sparse --hstore --style /home/osm/openstreetmap-carto-2.29.1/openstreetmap-carto.style /maps_source/latvia-latest.osm.pbf"
+#--number-processes 30
+#--cache 128000
+# IMPORT NEW (Clean import)
+su osm -c "osm2pgsql --slim --database world --number-processes 30 --disable-parallel-indexing --cache 128000 --cache-strategy sparse --hstore --style /home/osm/openstreetmap-carto-2.29.1/openstreetmap-carto.style /maps_source/latvia-latest.osm.pbf"
+
+# IMPORT (Already some countries exists)
+su osm -c "osm2pgsql --append --slim --database world --number-processes 30 --cache 128000 --cache-strategy sparse --hstore --style /home/osm/openstreetmap-carto-2.29.1/openstreetmap-carto.style /maps_source/ukraine-latest.osm.pbf"
+
 
 # DOWNLOAD MAPS
 http://download.geofabrik.de/
