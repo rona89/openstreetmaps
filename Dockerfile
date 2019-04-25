@@ -55,6 +55,6 @@ RUN chmod 755 /root/entrypoint.sh
 
 ADD index.html /var/www/html/index.html
 ADD leaflet.js /var/www/html/leaflet.js
-ADD style.css /var/www/html/style.css
+ADD leaflet.css /var/www/html/leaflet.css
 
 CMD /root/entrypoint.sh
