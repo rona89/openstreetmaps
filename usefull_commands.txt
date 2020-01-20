@@ -31,3 +31,9 @@ http://download.geofabrik.de/
 http://download.geofabrik.de/europe/planet-latest.osm.pbf
 http://download.geofabrik.de/europe/europe-latest.osm.pbf
 http://download.geofabrik.de/europe/slovakia-latest.osm.pbf
+
+# Backup PSQL
+su postgres -c "pg_dump -a world > /maps_source/slovakia.psql"
+
+# Restore PSQL
+psql -d world -f /maps_source/slovakia.psql
